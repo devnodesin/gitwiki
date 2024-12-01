@@ -155,4 +155,76 @@ class GitService
             'message' => $message,
         ];
     }
+
+    private function runCommand(array $command): string
+    {
+        $result = Process::command($command)
+            ->path($this->repoPath)
+            ->run();
+
+        if (! $result->successful()) {
+            throw new RuntimeException('Git command failed: '.$result->errorOutput());
+        }
+
+        return trim($result->output());
+    }
+
+    /**
+     * Get the hash of the last commit
+     *
+     * @return string The short hash of the last commit
+     *
+     * @throws RuntimeException If git command fails
+     */
+    public function getLastCommitHash(): string
+    {
+        return $this->runCommand(['git', 'rev-parse', '--short', 'HEAD']);
+    }
+
+    /**
+     * Get the date of the last commit
+     *
+     * @return Carbon The date of the last commit
+     *
+     * @throws RuntimeException If git command fails
+     */
+    public function getLastCommitDate(): Carbon
+    {
+        $timestamp = $this->runCommand(['git', 'log', '-1', '--format=%ct']);
+
+        return Carbon::createFromTimestamp($timestamp);
+    }
+
+    /**
+     * Pull latest changes from the current branch
+     *
+     * @return array{status: string, message: string} Pull status and message
+     *
+     * @throws RuntimeException If git pull fails
+     */
+    public function pull(): array
+    {
+        $output = $this->runCommand(['git', 'pull']);
+        $hash = $this->getLastCommitHash();
+
+        if (str_contains($output, 'Already up to date')) {
+            return [
+                'status' => 'info',
+                'message' => "Already up to date #{$hash}",
+            ];
+        }
+
+        // Check if files were updated
+        if (str_contains($output, 'Updating') || str_contains($output, 'files changed')) {
+            return [
+                'status' => 'success',
+                'message' => "Successfully updated to #{$hash}",
+            ];
+        }
+
+        return [
+            'status' => 'error',
+            'message' => $output,
+        ];
+    }
 }
