@@ -26,12 +26,12 @@
                         <i class="bi bi-person-square fs-3"></i>
                     </a>
                     <ul class="dropdown-menu text-small shadow" style="">
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ route('user.profile') }}">Profile</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
                         @if (Auth::user()->role === App\Enums\UserRoles::Admin)
-                        <li><a class="dropdown-item" href="#">Manage Users</a></li>
+                        <li><a class="dropdown-item" href="{{ route('user.list') }}">Manage Users</a></li>
                         @endif
                         <li>
                             <hr class="dropdown-divider">

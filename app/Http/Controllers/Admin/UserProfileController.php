@@ -1,0 +1,74 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
+class UserProfileController extends Controller
+{
+    public function index(Request $request)
+    {
+        $title = [
+            'title' => 'User Profile',
+        ];
+
+        $user = Auth::user();
+
+        if (! $user) {
+            abort(403);
+        }
+
+        return view('pages.user.profile', [
+            'title' => $title,
+            'user' => $user,
+        ]);
+    }
+
+    public function update(Request $request)
+    {
+        $user = Auth::user();
+
+        if (! $user) {
+            abort(403);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name' => ['nullable', 'string', 'min:6', 'max:255'],
+            'email' => ['nullable', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'password' => ['nullable', 'string', 'min:6', 'confirmed'],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $validated = $validator->validated();
+
+        $updateData = [];
+
+        if ($request->filled('name')) {
+            $updateData['name'] = $validated['name'];
+        }
+
+        if ($request->filled('email')) {
+            $updateData['email'] = $validated['email'];
+        }
+
+        if ($request->filled('password')) {
+            $updateData['password'] = Hash::make($validated['password']);
+        }
+
+        if (! empty($updateData)) {
+            $user->update($updateData);
+
+            return redirect()->back()->with('success', 'Profile information updated successfully');
+        }
+
+        return redirect()->back()->with('info', 'No changes were made');
+    }
+}
