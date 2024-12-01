@@ -17,8 +17,9 @@ class UserPassword extends Command
         $email = $this->argument('email');
         $password = $this->argument('password');
 
-        if (!is_string($password) || strlen((string) $password) < 8) {
+        if (! is_string($password) || strlen((string) $password) < 8) {
             $this->error('Password must be at least 8 characters long');
+
             return 1;
         }
 
