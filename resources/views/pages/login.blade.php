@@ -7,7 +7,7 @@
                     <div class="container-fluix py-5">
                         <h1>Bunisess Hub</h1>
                         <p>a 360 App</p>
-                        <p><a href="{{ route('dashboard') }}" class="btn btn-warning btn-lg shadow-lg">Access
+                        <p><a href="{{ route('home') }}" class="btn btn-warning btn-lg shadow-lg">Access
                                 Application</a>
                         </p>
                     </div>

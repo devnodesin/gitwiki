@@ -37,17 +37,11 @@ class UserProfileController extends Controller
             abort(403);
         }
 
-        $validator = Validator::make($request->all(), [
-            'name' => ['nullable', 'string', 'min:6', 'max:255'],
-            'email' => ['nullable', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'password' => ['nullable', 'string', 'min:6', 'confirmed'],
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore(Auth::id())],
+            'password' => ['nullable', 'string', 'min:6', 'max:100', 'confirmed'],
         ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        $validated = $validator->validated();
 
         $updateData = [];
 

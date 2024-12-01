@@ -12,7 +12,7 @@
                         @foreach ($files as $file)
                             <li class="list-group-item">
                                 <a class="link-dark link-offset-2"
-                                    href="{{ route('wiki.view', ['any' => $file['url']]) }}">{{ $file['title'] }}</a>
+                                    href="{{ route('wiki.page', ['any' => $file['url']]) }}">{{ $file['title'] }}</a>
                             </li>
                         @endforeach
                     </ul>

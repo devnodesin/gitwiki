@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class UserAdd extends Command
 {
@@ -29,8 +30,8 @@ class UserAdd extends Command
         ], [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:1', 'max:6'],
-            'role' => ['required', 'in:'.implode(',', UserRoles::values())],
+            'password' => ['required', 'string', 'min:6', 'max:100'],
+            'role' => ['required', 'string', Rule::in(UserRoles::values())],
         ]);
 
         if ($validator->fails()) {

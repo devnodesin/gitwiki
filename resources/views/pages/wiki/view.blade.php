@@ -8,7 +8,7 @@
     </div>
     <div class="row border-top border-3 py-2 mt-2">
         <div class="col">
-            <a class="btn btn-dark" href="{{ route('wiki') }}">
+            <a class="btn btn-dark" href="{{ route('home') }}">
                 <i class="bi bi-caret-left-fill"></i> Back
             </a>
         </div>

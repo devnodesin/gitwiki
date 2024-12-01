@@ -32,18 +32,12 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'Unauthorized action');
         }
 
-        $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'min:6', 'max:255'],
-            'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:6'],
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:6', 'max:100'],
             'role' => ['required', 'string', Rule::in(UserRoles::values())],
         ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->with('error', 'Validation failed');
-        }
-
-        $validated = $validator->validated();
 
         /** @var User $newUser */
         $newUser = User::create([
@@ -75,18 +69,13 @@ class UserController extends Controller
             }
         }
 
-        $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'min:6', 'max:255'],
-            'email' => ['required', 'email', 'unique:users,email,'.$targetUser->id],
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($id)],
             'role' => ['required', 'string', Rule::in(UserRoles::values())],
-            'password' => ['nullable', 'string', 'min:6'],
+            'password' => ['nullable', 'string', 'min:6', 'max:100'],
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->with('error', 'Validation failed');
-        }
-
-        $validated = $validator->validated();
         $updateData = [
             'name' => $validated['name'],
             'email' => $validated['email'],

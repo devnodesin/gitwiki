@@ -8,22 +8,22 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    public function showLoginForm(): mixed
+    public function login(): mixed
     {
-        return view('pages.home', ['noHeader' => true, 'noFooter' => true]);
+        return view('pages.login', ['noHeader' => true, 'noFooter' => true]);
     }
 
-    public function login(Request $request): mixed
+    public function loginPost(Request $request): mixed
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
-            'password' => ['required', 'string', 'max:6'],
+            'password' => ['required', 'string', 'min:6', 'max:100'],
         ]);
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('wiki'));
+            return redirect()->intended(route('home'));
         }
 
         return back()->withErrors([
