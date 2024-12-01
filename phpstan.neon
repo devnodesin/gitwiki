@@ -1,0 +1,15 @@
+parameters:
+    level: 9
+    paths:
+        - app
+        - routes
+    treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        - '#Method .+ has no return type specified#'
+        - '#Method .+ has parameter \$.+ with no type specified#'
+        - '#Undefined variable: \$this#'
+        - '#Cannot cast mixed to string#'
+
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
