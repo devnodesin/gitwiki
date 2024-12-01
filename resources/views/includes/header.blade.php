@@ -2,7 +2,7 @@
     <div class="row">
         <div class="d-flex align-items-center">
             <div class="p-2">
-                <a href="{{ route('home') }}" class="link-body-emphasis text-decoration-none">
+                <a href="{{ route('wiki') }}" class="link-body-emphasis text-decoration-none">
                     <i class="bi bi-house-fill fs-3"></i>
                 </a>
             </div>

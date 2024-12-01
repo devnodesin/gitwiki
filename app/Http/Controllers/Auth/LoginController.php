@@ -10,7 +10,7 @@ class LoginController extends Controller
 {
     public function showLoginForm(): mixed
     {
-        return view('pages.welcome', ['noHeader' => true, 'noFooter' => true]);
+        return view('pages.home', ['noHeader' => true, 'noFooter' => true]);
     }
 
     public function login(Request $request): mixed
@@ -23,7 +23,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('dashboard'));
+            return redirect()->intended(route('wiki'));
         }
 
         return back()->withErrors([
