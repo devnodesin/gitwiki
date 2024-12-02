@@ -19,7 +19,7 @@
 
     <div class="row pt-2">
         <div class="col-12 col-md-6">
-            <form action="{{ route('user.profile-update') }}" method="POST">
+            <form action="{{ route('profile.update') }}" method="POST">
                 @csrf
                 <input type="hidden" name="update_type" value="profile">
                 <div class="form-floating mb-3">
@@ -51,7 +51,7 @@
 
     <div class="row pt-2">
         <div class="col-12 col-md-6">
-            <form action="{{ route('user.profile-update') }}" method="POST">
+            <form action="{{ route('profile.update') }}" method="POST">
                 @csrf
                 <input type="hidden" name="update_type" value="password">
                 <div class="form-floating mb-3">

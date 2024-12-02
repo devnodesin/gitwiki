@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 
 class UserProfileController extends Controller
 {
-    public function index(Request $request)
+    public function profile(Request $request)
     {
         $title = [
             'title' => 'User Profile',

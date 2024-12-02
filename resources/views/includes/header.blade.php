@@ -19,27 +19,33 @@
                     @endisset
                 </p>
             </div>
+
             <div class="ms-auto p-2">
                 <div class="flex-shrink-0 dropdown">
                     <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-person-square fs-3"></i>
                     </a>
-                    <ul class="dropdown-menu text-small shadow" style="">
-                        <li><a class="dropdown-item" href="{{ route('profile') }}">Profile</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        @if (Auth::check() && Auth::user()->role === App\Enums\UserRoles::Admin)
-                        <li><a class="dropdown-item" href="{{ route('user.list') }}">Manage Users</a></li>
+                    <ul class="dropdown-menu text-small shadow">
+                        @if (Auth::check())
+                            <li><a class="dropdown-item" href="{{ route('profile') }}">Profile</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            @if (Auth::check() && Auth::user()->role === App\Enums\UserRoles::Admin)
+                                <li><a class="dropdown-item" href="{{ route('user.list') }}">Manage Users</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                            @endif
+                            <li><a class="dropdown-item" href="{{ route('logout') }}">Sign out</a></li>
+                        @else
+                            <li><a class="dropdown-item" href="{{ route('login') }}">Login</a></li>
                         @endif
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="{{ route('logout') }}">Sign out</a></li>
                     </ul>
                 </div>
             </div>
+
         </div>
 
 

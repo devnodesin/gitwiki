@@ -1,7 +1,7 @@
 @extends('layouts.default')
 @section('content')
 
-    <div class="row pt-4 border-bottom border-3">
+    <div class="row pt-4">
         <div class="col">
             @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -21,14 +21,16 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
+            @if (Auth::check() && Auth::user()->role === \App\Enums\UserRoles::Admin)
             <div class="d-flex justify-content-between mb-2">
                 <span class="text-secondary">{{ $lastCommit['hash'] }} . {{ $lastCommit['date']->diffForHumans() }}</span>
                 <a class="btn btn-dark" href="{{ route('gitwiki.pull') }}">
                     <i class="bi bi-arrow-clockwise"></i> Git Update
                 </a>
             </div>
+            <hr>
+            @endif
         </div>
-
     </div>
     <div class="row pt-4">
         @foreach ($dirs as $dir => $files)

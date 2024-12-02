@@ -6,6 +6,13 @@ use App\Http\Controllers\Admin\WikiController;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 
+//Wiki Routes
+if (config('wiki.auth_enable')) {
+    Route::middleware('auth')->group(base_path('routes/wiki.php'));
+} else {
+    Route::middleware('web')->group(base_path('routes/wiki.php'));
+}
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'login'])->name('login');
     Route::post('/login', [LoginController::class, 'loginPost'])->name('login.post');
@@ -14,26 +21,9 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-    Route::get('/', [WikiController::class, 'index'])->name('home');
-
-    // Wiki Routes
-    Route::prefix('wiki')->group(function () {
-        Route::get('/images/{any}', [WikiController::class, 'image'])
-            ->name('wiki.image')
-            ->where('any', '.*');
-
-        // Git Wiki Routes
-        Route::get('/update', [WikiController::class, 'pull'])
-            ->name('gitwiki.pull');
-
-        Route::get('/{any}', [WikiController::class, 'view'])
-            ->name('wiki.page')
-            ->where('any', '(?!images/).*');
-    });
-
     // Profile Routes
     Route::get('/profile', [UserProfileController::class, 'profile'])->name('profile');
-    Route::post('/profile', [UserProfileController::class, 'profileUpdate'])->name('profile.update');
+    Route::post('/profile', [UserProfileController::class, 'update'])->name('profile.update');
 
     // User Management Routes
     Route::prefix('users')->group(function () {
