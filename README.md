@@ -24,13 +24,32 @@ A secure Laravel-based wiki application designed for small and medium-sized busi
 3. Run `php artisan migrate`
 4. Run `php artisan db:seed`
 
+## Git Repository Management
+
+GitWiki provides command-line tools to manage your Git repositories:
+
+```bash
+# Clone a repository (defaults to 'main' branch)
+php artisan gitwiki:clone https://github.com/devnodesin/gitwiki-doc.git
+
+# Clone with specific branch
+php artisan gitwiki:clone https://github.com/user/repo.git --branch=develop
+
+# Pull latest changes
+php artisan gitwiki:pull
+```
+
+The repositories are stored in the `/storage/git` directory. Wiki pages and images should be organized as follows:
+- Markdown files: `/storage/git/pages/`
+- Images: `/storage/git/images/`
+
 ## Configuration
 
 The application can be configured using environment variables:
 
 ```env
-APP_NAME=hub
-APP_URL=http://hub.test
+APP_NAME=GitWiki
+APP_URL=http://gitwiki.test
 ```
 
 ## Security
@@ -38,13 +57,6 @@ APP_URL=http://hub.test
 - Authentication required for all wiki pages
 - Content secured in Git repositories
 - No direct content modification through web interface
-
-## Storage Structure
-
-Wiki content is stored in:
-```
-/storage/git/
-```
 
 ## License
 
