@@ -72,7 +72,7 @@ class WikiController extends Controller
         }
 
         $html = $this->markdownService->toHtml($content);
-        $title = ['title' => $this->wikiFileService->getPageTitle($any)];
+        $title = ['title' => WikiFileService::toTitle($any)];
 
         return view('pages.wiki.view', compact('title', 'html'));
     }
@@ -86,7 +86,7 @@ class WikiController extends Controller
     {
         $path = $this->wikiFileService->getImagePath($any);
         if ($path === null) {
-            abort(404);
+            abort(404, 'Image not found or invalid file type');
         }
 
         return response()->file($path);

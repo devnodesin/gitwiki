@@ -10,20 +10,29 @@ use RuntimeException;
 class WikiFileService
 {
     private string $gitPath;
+
     private string $pagesPath;
+
     private string $imagesPath;
 
     public function __construct()
     {
-        $this->gitPath = config('wiki.git_path');
-        $this->pagesPath = config('wiki.pages_path');
-        $this->imagesPath = config('wiki.images_path');
+        /** @var string */
+        $gitPath = config('wiki.git_path');
+        /** @var string */
+        $pagesPath = config('wiki.pages_path');
+        /** @var string */
+        $imagesPath = config('wiki.images_path');
+
+        $this->gitPath = storage_path((string) $gitPath);
+        $this->pagesPath = $this->gitPath.$pagesPath;
+        $this->imagesPath = $this->gitPath.$imagesPath;
     }
 
     /**
      * Get a list of directories and their files under the pages directory
      *
-     * @return array<string, array<array{title: string, url: string}>>
+     * @return array<string, non-empty-array<int, array{title: string|null, url: string}>>
      *
      * @throws RuntimeException If base directory doesn't exist
      */
@@ -55,76 +64,21 @@ class WikiFileService
                 ->map(function (\Symfony\Component\Finder\SplFileInfo $file) use ($dirName) {
                     // Get relative path from the base directory
                     $relativePath = $file->getRelativePathname();
-                    
+
                     return [
-                        'title' => $this->formatTitle($file->getFilename()),
-                        'url' => $this->formatUrl($dirName, $relativePath),
+                        'title' => self::toTitle($file->getFilename()),
+                        'url' => $dirName.'/'.self::toUrl($relativePath),
                     ];
                 })
                 ->values()
                 ->all();
 
             if (! empty($files)) {
-                // Remove numeric prefix and format directory name
-                $formattedDirName = preg_replace('/^\d+\-/', '', $dirName);
-                $formattedDirName = $this->formatTitle($formattedDirName);
-                $listing[$formattedDirName] = $files;
+                $listing[self::toTitle($dirName)] = $files;
             }
         }
 
         return $listing;
-    }
-
-    /**
-     * Get the page title from the path
-     *
-     * @param  string  $path  The wiki path
-     * @return string The formatted page title
-     */
-    public function getPageTitle(string $path): string
-    {
-        $parts = explode('/', trim($path, '/'));
-        $filename = end($parts);
-
-        if (! is_string($filename)) {
-            throw new RuntimeException('Invalid path format');
-        }
-
-        // Remove .md extension if present
-        $filename = preg_replace('/\.md$/', '', $filename);
-
-        return $this->formatTitle($filename);
-    }
-
-    /**
-     * Get the absolute path to a file in the git storage
-     *
-     * @param  string  $directory  Directory name
-     * @param  string  $file  File path relative to directory
-     * @return string Absolute path to the file
-     *
-     * @throws RuntimeException If file doesn't exist
-     */
-    public function getFilePath(string $directory, string $file): string
-    {
-        $path = $this->pagesPath.'/'.$directory.'/'.$file;
-
-        if (! File::exists($path)) {
-            throw new RuntimeException('File does not exist: '.$file);
-        }
-
-        return $path;
-    }
-
-    /**
-     * Check if a file exists in a directory
-     *
-     * @param  string  $directory  Directory name
-     * @param  string  $file  File path relative to directory
-     */
-    public function fileExists(string $directory, string $file): bool
-    {
-        return File::exists($this->pagesPath.'/'.$directory.'/'.$file);
     }
 
     /**
@@ -134,50 +88,49 @@ class WikiFileService
      * @param  string|null  $filename  The filename to format
      * @return string The formatted title in Title Case
      */
-    public function formatTitle(?string $filename): string
+    public static function toTitle(?string $filename): string
     {
         if ($filename === null) {
             return '';
         }
 
-        // Remove any path info and extension
         $basename = pathinfo($filename, PATHINFO_FILENAME);
+        /** @var string */
+        $title = (string) preg_replace('/^\d+\-/', '', $basename);
+        $title = str_replace(['_', '-'], ' ', $title);
 
-        // Replace dashes and underscores with spaces
-        $title = str_replace(['-', '_'], ' ', $basename);
-
-        // Convert to title case
         return Str::title($title);
     }
 
     /**
      * Format a file path into a URL-friendly string
      *
-     * @param  string  $directory  The directory name (e.g., "00-general")
      * @param  string  $filename  The filename (e.g., "tasks-list.md" or "subdir/tasks-list.md")
      * @return string The URL-friendly path (e.g., "00-general/tasks-list" or "00-general/subdir/tasks-list")
      */
-    private function formatUrl(string $directory, string $filename): string
+    private static function toUrl(string $filename): string
     {
         // Get the full path without extension
         $pathInfo = pathinfo($filename);
-        $relativePath = str_replace($pathInfo['extension'], '', $pathInfo['dirname'] . '/' . $pathInfo['filename']);
-        $relativePath = trim($relativePath, './');
+        $dirname = $pathInfo['dirname'] ?? '.';
+        $extension = $pathInfo['extension'] ?? '';
 
-        // Combine directory and relative path
-        return $directory . '/' . $relativePath;
+        $relativePath = str_replace($extension, '', $dirname.'/'.$pathInfo['filename']);
+        $url = trim($relativePath, './');
+
+        return $url;
     }
 
     /**
-     * Get the content of a wiki file
+     * Get the content of a wiki file from either root or directory structure
      *
-     * @param  string  $directory  Directory name
-     * @param  string  $file  File path relative to directory
-     * @return string|null File content or null if file doesn't exist
+     * @param  string  $slug  The wiki slug (e.g., "00-general/tasks-list" or "about" or "00-general/subdir/tasks-list")
+     * @return string|null The file content or null if not found
      */
-    public function getFileContent(string $directory, string $file): ?string
+    public function getWikiContent(string $slug): ?string
     {
-        $path = $this->pagesPath.'/'.$directory.'/'.$file;
+        // url to path
+        $path = $this->pagesPath.'/'.trim($slug, '/').'.md';
 
         if (! File::exists($path)) {
             return null;
@@ -186,37 +139,27 @@ class WikiFileService
         return File::get($path);
     }
 
-    /**
-     * Get the content of a wiki file from either root or directory structure
-     *
-     * @param  string  $path  The wiki path (e.g., "00-general/tasks-list" or "about" or "00-general/subdir/tasks-list")
-     * @return string|null The file content or null if not found
-     */
-    public function getWikiContent(string $path): ?string
+    public function getImagePath(string $slug): ?string
     {
-        // Try root directory first
-        $rootFile = $this->gitPath.'/'.trim($path, '/').'.md';
-        if (file_exists($rootFile)) {
-            $content = file_get_contents($rootFile);
-            return $content === false ? null : $content;
-        }
-
-        // Try directory structure
-        $parts = explode('/', trim($path, '/'));
-        if (empty($parts)) {
+        $path = $this->imagesPath.'/'.trim($slug, '/');
+        if (! File::exists($path)) {
             return null;
         }
 
-        // First part is always the directory
-        $directory = array_shift($parts);
-        
-        // Rest is the file path
-        $filePath = implode('/', $parts) . '.md';
+        // Check if the file is actually an image
+        $mime = mime_content_type($path);
+        $allowedMimes = [
+            'image/jpeg',
+            'image/png',
+            'image/gif',
+            'image/webp',
+            'image/svg+xml',
+        ];
 
-        if (! $this->fileExists($directory, $filePath)) {
+        if (! in_array($mime, $allowedMimes)) {
             return null;
         }
 
-        return $this->getFileContent($directory, $filePath);
+        return $path;
     }
 }

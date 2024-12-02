@@ -156,6 +156,16 @@ class GitService
         ];
     }
 
+    /**
+     * Run a git command and return its output
+     * this method will be used to run simple git commands
+     * for complex commands, we use Process
+     *
+     * @param  array<string>  $command  Command array where each element is a command part
+     * @return string Command output
+     *
+     * @throws RuntimeException If the command fails
+     */
     private function runCommand(array $command): string
     {
         $result = Process::command($command)
