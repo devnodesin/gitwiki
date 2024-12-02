@@ -24,7 +24,7 @@
             <div class="d-flex justify-content-between mb-2">
                 <span class="text-secondary">{{ $lastCommit['hash'] }} . {{ $lastCommit['date']->diffForHumans() }}</span>
                 <a class="btn btn-dark" href="{{ route('gitwiki.pull') }}">
-                    <i class="bi bi-arrow-clockwise"></i> Update
+                    <i class="bi bi-arrow-clockwise"></i> Git Update
                 </a>
             </div>
         </div>

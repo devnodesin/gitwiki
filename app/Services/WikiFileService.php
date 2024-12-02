@@ -49,12 +49,12 @@ class WikiFileService
                     return in_array($extension, ['md', 'markdown']);
                 })
                 ->map(function (\Symfony\Component\Finder\SplFileInfo $file) use ($dirName) {
-                    $filename = $file->getFilename();
-                    assert(is_string($filename));
-
+                    // Get relative path from the base directory
+                    $relativePath = $file->getRelativePathname();
+                    
                     return [
-                        'title' => $this->formatTitle($filename),
-                        'url' => $this->formatUrl($dirName, $filename),
+                        'title' => $this->formatTitle($file->getFilename()),
+                        'url' => $this->formatUrl($dirName, $relativePath),
                     ];
                 })
                 ->values()
@@ -150,16 +150,18 @@ class WikiFileService
      * Format a file path into a URL-friendly string
      *
      * @param  string  $directory  The directory name (e.g., "00-general")
-     * @param  string  $filename  The filename (e.g., "tasks-list.md")
-     * @return string The URL-friendly path (e.g., "00-general/tasks-list")
+     * @param  string  $filename  The filename (e.g., "tasks-list.md" or "subdir/tasks-list.md")
+     * @return string The URL-friendly path (e.g., "00-general/tasks-list" or "00-general/subdir/tasks-list")
      */
     private function formatUrl(string $directory, string $filename): string
     {
-        // Remove file extension
-        $basename = pathinfo($filename, PATHINFO_FILENAME);
+        // Get the full path without extension
+        $pathInfo = pathinfo($filename);
+        $relativePath = str_replace($pathInfo['extension'], '', $pathInfo['dirname'] . '/' . $pathInfo['filename']);
+        $relativePath = trim($relativePath, './');
 
-        // Combine directory and file
-        return $directory.'/'.$basename;
+        // Combine directory and relative path
+        return $directory . '/' . $relativePath;
     }
 
     /**
@@ -183,7 +185,7 @@ class WikiFileService
     /**
      * Get the content of a wiki file from either root or directory structure
      *
-     * @param  string  $path  The wiki path (e.g., "00-general/tasks-list" or "about")
+     * @param  string  $path  The wiki path (e.g., "00-general/tasks-list" or "about" or "00-general/subdir/tasks-list")
      * @return string|null The file content or null if not found
      */
     public function getWikiContent(string $path): ?string
@@ -192,23 +194,25 @@ class WikiFileService
         $rootFile = storage_path('git/'.trim($path, '/').'.md');
         if (file_exists($rootFile)) {
             $content = file_get_contents($rootFile);
-
             return $content === false ? null : $content;
         }
 
         // Try directory structure
         $parts = explode('/', trim($path, '/'));
-        if (count($parts) !== 2) {
+        if (empty($parts)) {
             return null;
         }
 
-        [$directory, $file] = $parts;
-        $filename = $file.'.md';
+        // First part is always the directory
+        $directory = array_shift($parts);
+        
+        // Rest is the file path
+        $filePath = implode('/', $parts) . '.md';
 
-        if (! $this->fileExists($directory, $filename)) {
+        if (! $this->fileExists($directory, $filePath)) {
             return null;
         }
 
-        return $this->getFileContent($directory, $filename);
+        return $this->getFileContent($directory, $filePath);
     }
 }
