@@ -9,15 +9,19 @@ use RuntimeException;
 
 class WikiFileService
 {
-    private string $basePath;
+    private string $gitPath;
+    private string $pagesPath;
+    private string $imagesPath;
 
     public function __construct()
     {
-        $this->basePath = storage_path('git/pages');
+        $this->gitPath = config('wiki.git_path');
+        $this->pagesPath = config('wiki.pages_path');
+        $this->imagesPath = config('wiki.images_path');
     }
 
     /**
-     * Get a list of directories and their files under /storage/git/pages
+     * Get a list of directories and their files under the pages directory
      *
      * @return array<string, array<array{title: string, url: string}>>
      *
@@ -25,11 +29,11 @@ class WikiFileService
      */
     public function getDirectoryListing(): array
     {
-        if (! File::exists($this->basePath)) {
+        if (! File::exists($this->pagesPath)) {
             throw new RuntimeException('Git pages directory does not exist');
         }
 
-        $directories = File::directories($this->basePath);
+        $directories = File::directories($this->pagesPath);
         $listing = [];
 
         foreach ($directories as $directory) {
@@ -103,7 +107,7 @@ class WikiFileService
      */
     public function getFilePath(string $directory, string $file): string
     {
-        $path = $this->basePath.'/'.$directory.'/'.$file;
+        $path = $this->pagesPath.'/'.$directory.'/'.$file;
 
         if (! File::exists($path)) {
             throw new RuntimeException('File does not exist: '.$file);
@@ -120,7 +124,7 @@ class WikiFileService
      */
     public function fileExists(string $directory, string $file): bool
     {
-        return File::exists($this->basePath.'/'.$directory.'/'.$file);
+        return File::exists($this->pagesPath.'/'.$directory.'/'.$file);
     }
 
     /**
@@ -173,7 +177,7 @@ class WikiFileService
      */
     public function getFileContent(string $directory, string $file): ?string
     {
-        $path = $this->basePath.'/'.$directory.'/'.$file;
+        $path = $this->pagesPath.'/'.$directory.'/'.$file;
 
         if (! File::exists($path)) {
             return null;
@@ -191,7 +195,7 @@ class WikiFileService
     public function getWikiContent(string $path): ?string
     {
         // Try root directory first
-        $rootFile = storage_path('git/'.trim($path, '/').'.md');
+        $rootFile = $this->gitPath.'/'.trim($path, '/').'.md';
         if (file_exists($rootFile)) {
             $content = file_get_contents($rootFile);
             return $content === false ? null : $content;
