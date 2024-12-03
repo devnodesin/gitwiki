@@ -60,11 +60,11 @@ class WikiController extends Controller
     /**
      * Display wiki page
      *
-     * @param  string  $any  The full path after /wiki/ (e.g., "00-general/tasks-list" or "about")
+     * @param  string  $slug  The full path after /wiki/ (e.g., "00-general/tasks-list" or "about")
      */
-    public function view(string $any)
+    public function view(string $slug)
     {
-        $content = $this->wikiFileService->getWikiContent($any);
+        $content = $this->wikiFileService->getWikiContent($slug);
         if ($content === null) {
             return response()->view('errors.404', [
                 'title' => ['title' => 'Page Not Found'],
@@ -72,7 +72,7 @@ class WikiController extends Controller
         }
 
         $html = $this->markdownService->toHtml($content);
-        $title = ['title' => WikiFileService::toTitle($any)];
+        $title = ['title' => WikiFileService::toTitle($slug)];
 
         return view('pages.wiki.view', compact('title', 'html'));
     }
@@ -80,11 +80,16 @@ class WikiController extends Controller
     /**
      * Serve wiki images
      *
-     * @param  string  $any  The image path after /wiki/image/
+     * @param  string  $slug  The image path after /wiki/image/
      */
-    public function image(string $any): BinaryFileResponse
+    public function image(string $slug): BinaryFileResponse
     {
-        $path = $this->wikiFileService->getImagePath($any);
+        $extension = pathinfo($slug, PATHINFO_EXTENSION);
+        if (! in_array(strtolower($extension), ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'])) {
+            abort(404, 'Image not found or invalid file type');
+        }
+
+        $path = $this->wikiFileService->getImagePath($slug);
         if ($path === null) {
             abort(404, 'Image not found or invalid file type');
         }
