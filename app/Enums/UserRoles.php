@@ -5,7 +5,7 @@ namespace App\Enums;
 enum UserRoles: string
 {
     case Admin = 'admin';
-    case User = 'user';
+    case Reader = 'reader';
 
     /**
      * @return array<string>
