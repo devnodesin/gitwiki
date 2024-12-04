@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 
 class UserDelete extends Command
 {
-    protected $signature = 'gitwiki:userdel {email}';
+    protected $signature = 'wiki:userdel {email}';
 
     protected $description = 'Delete a user by email';
 

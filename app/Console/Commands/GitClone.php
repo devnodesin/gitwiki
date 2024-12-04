@@ -8,7 +8,7 @@ use RuntimeException;
 
 class GitClone extends Command
 {
-    protected $signature = 'gitwiki:clone {url} {--branch=}';
+    protected $signature = 'wiki:clone {url} {--branch=}';
 
     protected $description = 'Clone a git repository into the storage directory';
 

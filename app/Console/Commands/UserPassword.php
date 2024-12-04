@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserPassword extends Command
 {
-    protected $signature = 'gitwiki:passwd {email} {password}';
+    protected $signature = 'wiki:passwd {email} {password}';
 
     protected $description = 'Reset user password';
 

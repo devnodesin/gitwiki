@@ -11,7 +11,7 @@ use Illuminate\Validation\Rule;
 
 class UserAdd extends Command
 {
-    protected $signature = 'gitwiki:useradd';
+    protected $signature = 'wiki:useradd';
 
     protected $description = 'Add new user';
 

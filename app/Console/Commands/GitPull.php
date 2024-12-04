@@ -8,7 +8,7 @@ use RuntimeException;
 
 class GitPull extends Command
 {
-    protected $signature = 'gitwiki:pull';
+    protected $signature = 'wiki:pull';
 
     protected $description = 'Pull latest changes from the git repository';
 
@@ -17,7 +17,7 @@ class GitPull extends Command
         $repoPath = storage_path('git');
 
         if (! is_dir($repoPath)) {
-            $this->error('Git repository not found. Please clone a repository first using gitwiki:clone.');
+            $this->error('Git repository not found. Please clone a repository first using wiki:clone.');
 
             return 1;
         }
