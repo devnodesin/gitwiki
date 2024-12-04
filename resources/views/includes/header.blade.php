@@ -6,6 +6,7 @@
                     <i class="bi bi-house-fill fs-3"></i>
                 </a>
             </div>
+            @isset($title['title'])
             <div class="p-2 align-self-center">
                 <p class="fs-3 m-0 p-0">
                     @isset($title['title_url'])
@@ -19,6 +20,7 @@
                     @endisset
                 </p>
             </div>
+            @endisset
 
             <div class="ms-auto p-2">
                 <div class="flex-shrink-0 dropdown">
