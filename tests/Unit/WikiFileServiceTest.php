@@ -28,8 +28,8 @@ class WikiFileServiceTest extends TestCase
 
     public function test_get_image_path_with_existing_file(): void
     {
-        // Create test image file
-        $testFile = '/test-image.png';
+        // image file
+        $testFile = 'test/test.jpg';
 
         // Test getImagePath
         $result = $this->service->getImagePath($testFile);
@@ -40,8 +40,8 @@ class WikiFileServiceTest extends TestCase
 
     public function test_get_image_path_with_not_existing_file(): void
     {
-        // Create test image file
-        $testFile = '/wiki/images/nofile'.uniqid().'.jpg';
+        // image file
+        $testFile = 'test/nofile'.uniqid().'.jpg';
 
         // Test getImagePath
         $result = $this->service->getImagePath($testFile);
@@ -53,12 +53,10 @@ class WikiFileServiceTest extends TestCase
     public function test_get_wiki_content_with_existing_file(): void
     {
         // Create test wiki file
-        $testFile = '00-general/tasks-list';
+        $testFile = '99-test/test';
 
         // Test getWikiContent
         $result = $this->service->getWikiContent($testFile);
-
-        //dd($result);
 
         // Assertions
         $this->assertNotNull($result);
