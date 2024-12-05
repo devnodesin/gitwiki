@@ -63,6 +63,15 @@
                     @enderror
                 </div>
 
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" id="password_confirmation"
+                        name="password_confirmation" placeholder="Confirm new password">
+                    <label for="password_confirmation">Confirm New Password</label>
+                    @error('password_confirmation')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 <button type="submit" class="btn btn-dark">Update Password</button>
             </form>
         </div>

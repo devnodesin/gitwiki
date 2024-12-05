@@ -36,32 +36,28 @@ class UserProfileController extends Controller
             abort(403);
         }
 
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore(Auth::id())],
-            'password' => ['nullable', 'string', 'min:6', 'max:100', 'confirmed'],
-        ]);
-
+        $updateType = $request->input('update_type');
         $updateData = [];
 
-        if ($request->filled('name')) {
+        if ($updateType === 'profile') {
+            $validated = $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore(Auth::id())],
+            ]);
+
             $updateData['name'] = $validated['name'];
-        }
-
-        if ($request->filled('email')) {
             $updateData['email'] = $validated['email'];
-        }
+        } elseif ($updateType === 'password') {
+            $validated = $request->validate([
+                'password' => ['required', 'string', 'min:6', 'max:100', 'confirmed'],
+            ]);
 
-        if ($request->filled('password')) {
             $updateData['password'] = Hash::make($validated['password']);
+        } else {
+            return redirect()->back()->with('error', 'Invalid update type');
         }
 
-        if (! empty($updateData)) {
-            $user->update($updateData);
-
-            return redirect()->back()->with('success', 'Profile information updated successfully');
-        }
-
-        return redirect()->back()->with('info', 'No changes were made');
+        $user->update($updateData);
+        return redirect()->back()->with('success', 'Profile information updated successfully');
     }
 }
