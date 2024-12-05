@@ -24,16 +24,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [UserProfileController::class, 'profile'])->name('profile');
     Route::post('/profile', [UserProfileController::class, 'update'])->name('profile.update');
 
-    // User Management Routes
-    /*
-    Route::prefix('users')->group(function () {
-        Route::get('/', [UserController::class, 'index'])->name('user.list');
-        Route::post('/{id}', [UserController::class, 'update'])->name('user.update');
-        Route::post('/', [UserController::class, 'add'])->name('user.add');
-        Route::delete('/{id}', [UserController::class, 'delete'])->name('user.delete');
-    });
-    */
-
     Route::prefix('users')->group(function () {
         Route::middleware('admin')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('user.list');
