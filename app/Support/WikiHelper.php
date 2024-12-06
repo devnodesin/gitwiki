@@ -10,16 +10,17 @@ class WikiHelper
      * Converts a local file path to a URL for the wiki by
      * removing the local path and file extension.
      *
-     * @param  string  $path  the local file path.
+     * @param  string  $filename  the local file path.
      * @return string the URL for the wiki.
      */
-    public static function urlize(string $path): string
+    public static function urlize(?string $filename): string
     {
-        if ($path === null) {
+        if ($filename === null) {
             return '';
         }
+
         // for windows path separators
-        $path = str_replace('\\', '/', $path);
+        $path = str_replace('\\', '/', $filename);
 
         // Get the extension
         $pathInfo = pathinfo($path);
@@ -34,10 +35,11 @@ class WikiHelper
     }
 
     /**
-     * Converts a given path to a url that can be used in the wiki
+     * Formats a filename into a readable title by removing numbers
+     * and replacing special characters.
      *
-     * @param  string  $path  the path to convert
-     * @return string the converted url
+     * @param  string|null  $filename  The filename to format
+     * @return string The formatted title in Title Case
      */
     public static function title(?string $filename): string
     {

@@ -16,7 +16,8 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (! Auth::check() || Auth::user()->role !== UserRoles::Admin) {
+        $user = Auth::user();
+        if (! $user || $user->role !== UserRoles::Admin) {
             return redirect()->back()->with('error', 'Unauthorized action');
         }
 

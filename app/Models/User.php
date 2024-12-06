@@ -52,6 +52,6 @@ class User extends Authenticatable
 
     public function isUser(): bool
     {
-        return $this->role === UserRoles::User;
+        return $this->role === UserRoles::Reader;
     }
 }
