@@ -3,22 +3,6 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | Wiki Storage Paths
-    |--------------------------------------------------------------------------
-    |
-    | Here you can configure the paths for storing wiki-related files.
-    | These settings can be overridden using environment variables.
-    |
-    */
-
-    'git_path' => env('WIKI_GIT_PATH', 'git'),
-
-    'pages_path' => env('WIKI_PAGES_PATH', '/pages'),
-
-    'images_path' => env('WIKI_IMAGES_PATH', '/images'),
-
-    /*
-    |--------------------------------------------------------------------------
     | Wiki Access Control
     |--------------------------------------------------------------------------
     |

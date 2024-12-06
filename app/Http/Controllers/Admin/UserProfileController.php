@@ -58,6 +58,7 @@ class UserProfileController extends Controller
         }
 
         $user->update($updateData);
+
         return redirect()->back()->with('success', 'Profile information updated successfully');
     }
 }

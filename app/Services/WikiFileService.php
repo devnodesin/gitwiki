@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use App\Support\WikiHelper;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use RuntimeException;
 
 class WikiFileService
@@ -17,16 +17,10 @@ class WikiFileService
 
     public function __construct()
     {
-        /** @var string */
-        $gitPath = config('wiki.git_path');
-        /** @var string */
-        $pagesPath = config('wiki.pages_path');
-        /** @var string */
-        $imagesPath = config('wiki.images_path');
 
-        $this->gitPath = storage_path((string) $gitPath);
-        $this->pagesPath = $this->gitPath.$pagesPath;
-        $this->imagesPath = $this->gitPath.$imagesPath;
+        $this->gitPath = storage_path((string) 'git');
+        $this->pagesPath = $this->gitPath.'/pages';
+        $this->imagesPath = $this->gitPath.'/images';
     }
 
     /**
@@ -61,64 +55,21 @@ class WikiFileService
 
                     return in_array($extension, ['md', 'markdown']);
                 })
-                ->map(function (\Symfony\Component\Finder\SplFileInfo $file) use ($dirName) {
-                    // Get relative path from the base directory
-                    $relativePath = $file->getRelativePathname();
-
+                ->map(function (\Symfony\Component\Finder\SplFileInfo $file) {
                     return [
-                        'title' => self::toTitle($file->getFilename()),
-                        'url' => $dirName.'/'.self::toUrl($relativePath),
+                        'title' => WikiHelper::title($file->getFilename()),
+                        'url' => WikiHelper::urlize($file->getPathname()),
                     ];
                 })
                 ->values()
                 ->all();
 
             if (! empty($files)) {
-                $listing[self::toTitle($dirName)] = $files;
+                $listing[WikiHelper::title($dirName)] = $files;
             }
         }
 
         return $listing;
-    }
-
-    /**
-     * Format a filename into a readable title
-     * Handles both path-based filenames and simple filenames
-     *
-     * @param  string|null  $filename  The filename to format
-     * @return string The formatted title in Title Case
-     */
-    public static function toTitle(?string $filename): string
-    {
-        if ($filename === null) {
-            return '';
-        }
-
-        $basename = pathinfo($filename, PATHINFO_FILENAME);
-        /** @var string */
-        $title = (string) preg_replace('/^\d+\-/', '', $basename);
-        $title = str_replace(['_', '-'], ' ', $title);
-
-        return Str::title($title);
-    }
-
-    /**
-     * Format a file path into a URL-friendly string
-     *
-     * @param  string  $filename  The filename (e.g., "tasks-list.md" or "subdir/tasks-list.md")
-     * @return string The URL-friendly path (e.g., "00-general/tasks-list" or "00-general/subdir/tasks-list")
-     */
-    private static function toUrl(string $filename): string
-    {
-        // Get the full path without extension
-        $pathInfo = pathinfo($filename);
-        $dirname = $pathInfo['dirname'] ?? '.';
-        $extension = $pathInfo['extension'] ?? '';
-
-        $relativePath = str_replace($extension, '', $dirname.'/'.$pathInfo['filename']);
-        $url = trim($relativePath, './');
-
-        return $url;
     }
 
     /**

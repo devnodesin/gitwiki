@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\GitService;
 use App\Services\MarkdownService;
 use App\Services\WikiFileService;
+use App\Support\WikiHelper;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -72,7 +73,7 @@ class WikiController extends Controller
         }
 
         $html = $this->markdownService->toHtml($content);
-        $title = ['title' => WikiFileService::toTitle($slug)];
+        $title = ['title' => WikiHelper::title($slug)];
 
         return view('pages.wiki.view', compact('title', 'html'));
     }
