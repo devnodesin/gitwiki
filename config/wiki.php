@@ -12,5 +12,5 @@ return [
     */
 
     'auth_enable' => env('WIKI_AUTH_ENABLE', true),
-    'footer_copyright' => env('WIKI_FOOTER_COPYRIGHT', 'Copyright &copy; '.date('Y')." <a target='_blank' class='link-dark link-offset-2' href='https://github.com/devnodesin/gitwiki'>Git Wiki and Open Source by Devnodes.in</a>"),
+    'footer_copyright' => env('WIKI_FOOTER_COPYRIGHT', 'Copyright &copy; '.date('Y')." <a target='_blank' class='link-dark link-offset-2' href='https://github.com/devnodesin/gitwiki'>Git Wiki an Open Source by Devnodes.in</a>"),
 ];
