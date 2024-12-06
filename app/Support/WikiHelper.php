@@ -54,4 +54,5 @@ class WikiHelper
 
         return Str::title($title);
     }
+
 }

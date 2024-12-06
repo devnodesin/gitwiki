@@ -7,8 +7,10 @@ use App\Services\GitService;
 use App\Services\MarkdownService;
 use App\Services\WikiFileService;
 use App\Support\WikiHelper;
+use Illuminate\Support\Str;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class WikiController extends Controller
 {
@@ -65,6 +67,11 @@ class WikiController extends Controller
      */
     public function view(string $slug)
     {
+
+        if (Str::endsWith($slug, '.auth') && auth()->guest()) {
+            throw new HttpException(403, 'Login to view this page.');
+        }
+
         $content = $this->wikiFileService->getWikiContent($slug);
         if ($content === null) {
             return response()->view('errors.404', [
@@ -87,12 +94,12 @@ class WikiController extends Controller
     {
         $extension = pathinfo($slug, PATHINFO_EXTENSION);
         if (! in_array(strtolower($extension), ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'])) {
-            abort(404, 'Image not found or invalid file type');
+            throw new HttpException(404, 'Image not found or invalid file type');
         }
 
         $path = $this->wikiFileService->getImagePath($slug);
         if ($path === null) {
-            abort(404, 'Image not found or invalid file type');
+            throw new HttpException(404, 'Image not found or invalid file type');
         }
 
         return response()->file($path);
