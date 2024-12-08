@@ -53,7 +53,7 @@
                     <ul class="list-group list-group-flush">
                         @foreach ($files as $file)
                             <li class="list-group-item">
-                                <a class="link-dark link-offset-2"
+                                <a class="link-dark link-offset-3"
                                     href="{{ route('wiki.page', ['any' => $file['url']]) }}">{{ $file['title'] }}</a>
                             </li>
                         @endforeach

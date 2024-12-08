@@ -48,6 +48,12 @@ class WikiHelper
         }
 
         $basename = pathinfo($filename, PATHINFO_FILENAME);
+
+        if (Str::endsWith($basename, '.lock')) {
+            $basename = pathinfo($filename, PATHINFO_FILENAME);
+            $basename = (string) preg_replace('/\.lock$/', ' 🔒', $basename);
+        }
+        
         /** @var string */
         $title = (string) preg_replace('/^\d+\-/', '', $basename);
         $title = str_replace(['_', '-'], ' ', $title);

@@ -68,7 +68,7 @@ class WikiController extends Controller
     public function view(string $slug)
     {
 
-        if (Str::endsWith($slug, '.auth') && auth()->guest()) {
+        if (Str::endsWith($slug, '.lock') && auth()->guest()) {
             throw new HttpException(403, 'Login to view this page.');
         }
 

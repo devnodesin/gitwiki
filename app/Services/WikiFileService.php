@@ -46,14 +46,23 @@ class WikiFileService
             if (in_array($dirName, ['.git', 'node_modules', 'vendor'])) {
                 continue;
             }
+            if (! preg_match('/^[a-z0-9-]+$/', $dirName)) {
+                continue;
+            }
 
             // Get all files in this directory recursively
             $files = Collection::make(File::allFiles($directory))
                 ->filter(function ($file) {
                     // Filter out unwanted files
+                    $filename = pathinfo($file->getFilename(), PATHINFO_FILENAME);
                     $extension = strtolower($file->getExtension());
 
-                    return in_array($extension, ['md', 'markdown']);
+                    if (str_ends_with($filename, '.ignore')) {
+                        return false;
+                    }
+
+                    return preg_match('/^[a-z0-9.-]+$/', $filename) && 
+                           in_array($extension, ['md', 'markdown']);
                 })
                 ->map(function (\Symfony\Component\Finder\SplFileInfo $file) {
                     return [
