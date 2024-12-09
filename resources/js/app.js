@@ -1,2 +1,2 @@
-import 'bootstrap/js/index.esm.js';
+import 'bootstrap';
 import './custom';

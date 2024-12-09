@@ -24,7 +24,6 @@
     </div>
 
     @vite(['resources/js/app.js'])
-
     <!-- Page Specific Scripts -->
     @stack('scriptsFooter')
 </body>
