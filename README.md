@@ -61,3 +61,13 @@ APP_URL=http://gitwiki.test
 ## License
 
 This software is licensed under the MIT License (MIT). See the LICENSE file for details.
+
+## TODO
+
+ - [ ] Login rate limit
+ - [ ] Block image for nonlogged in users
+ - [ ] Settings to block search engine indexing
+ - [ ] Settings to block robots
+ - [ ] Settings to make wiki private
+
+
