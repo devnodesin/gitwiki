@@ -54,13 +54,13 @@ GitWiki provides command-line tools to manage your Git repositories:
 
 ```
 # Clone a repository (defaults to 'main' branch)
-php artisan gitwiki:clone https://github.com/devnodesin/gitwiki-doc.git
+php artisan wiki:clone https://github.com/devnodesin/gitwiki-doc.git
 
 # Clone with specific branch
-php artisan gitwiki:clone https://github.com/user/repo.git --branch=develop
+php artisan wiki:clone https://github.com/user/repo.git --branch=develop
 
 # Pull latest changes
-php artisan gitwiki:pull
+php artisan wiki:pull
 ```
 
 The repositories are stored in the `/storage/git` directory. Wiki pages and images should be organized as follows:
