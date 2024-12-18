@@ -17,18 +17,42 @@ A secure Laravel-based wiki application designed for small and medium-sized busi
 - Authentication required for viewing wiki pages
 - Git-based version control for content management
 
+## Requirements
+
+1. PHP 8.2+
+
 ## Installation
 
-1. Clone the repository
-2. Run `composer install`
-3. Run `php artisan migrate`
-4. Run `php artisan db:seed`
+- Clone the repository
+- Run `composer install`
+- Install nodejs packages and build
+
+refer <https://nodejs.org/en/download/package-manager> for nodejs install instructions
+
+```
+npm install
+npm run build
+```
+
+- Create .env file
+
+```
+cp .env.example .env
+```
+
+- Setup laravel
+
+```
+php artisan key:generate
+php artisan migrate
+php artisan db:seed
+```
 
 ## Git Repository Management
 
 GitWiki provides command-line tools to manage your Git repositories:
 
-```bash
+```
 # Clone a repository (defaults to 'main' branch)
 php artisan gitwiki:clone https://github.com/devnodesin/gitwiki-doc.git
 
@@ -40,6 +64,7 @@ php artisan gitwiki:pull
 ```
 
 The repositories are stored in the `/storage/git` directory. Wiki pages and images should be organized as follows:
+
 - Markdown files: `/storage/git/pages/`
 - Images: `/storage/git/images/`
 
@@ -64,10 +89,12 @@ This software is licensed under the MIT License (MIT). See the LICENSE file for 
 
 ## TODO
 
- - [ ] Login rate limit
- - [ ] Block image for nonlogged in users
- - [ ] Settings to block search engine indexing
- - [ ] Settings to block robots
- - [ ] Settings to make wiki private
+- [ ] Login rate limit
+- [ ] Block image for nonlogged in users
+- [ ] Settings to block search engine indexing
+- [ ] Settings to block robots
+- [ ] Settings to make wiki private
 
+## Reference
 
+- <https://www.cloudways.com/blog/install-laravel-on-server/>
