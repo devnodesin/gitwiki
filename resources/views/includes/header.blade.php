@@ -35,6 +35,7 @@
                                 <hr class="dropdown-divider">
                             </li>
                             @if (Auth::check() && Auth::user()->role === App\Enums\UserRoles::Admin)
+                                <li><a class="dropdown-item" href="{{ route('git.index') }}">Manage Content</a></li>
                                 <li><a class="dropdown-item" href="{{ route('user.list') }}">Manage Users</a></li>
                                 <li>
                                     <hr class="dropdown-divider">

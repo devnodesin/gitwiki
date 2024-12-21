@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Http\Request;
 
 class WikiController extends Controller
 {
@@ -71,7 +72,7 @@ class WikiController extends Controller
         if (Str::endsWith($slug, '.lock') && auth()->guest()) {
             throw new HttpException(403, 'Login to view this page.');
         }
-
+        
         $content = $this->wikiFileService->getWikiContent($slug);
         if ($content === null) {
             return response()->view('errors.404', [
@@ -83,6 +84,39 @@ class WikiController extends Controller
         $title = ['title' => WikiHelper::title($slug)];
 
         return view('pages.wiki.view', compact('title', 'html'));
+    }
+
+    public function edit(string $slug)
+    {
+
+        if (Str::endsWith($slug, '.lock') && auth()->guest()) {
+            throw new HttpException(403, 'Login to view this page.');
+        }
+        
+        $content = $this->wikiFileService->getWikiContent($slug);
+        if ($content === null) {
+            return response()->view('errors.404', [
+                'title' => ['title' => 'Page Not Found'],
+            ], 404);
+        }
+        //dd($content);
+        $title = ['title' => 'Edit: ' . WikiHelper::title($slug)];
+
+        return view('pages.wiki.edit', compact('title', 'content'));
+    }
+
+    public function save(Request $request, string $slug)
+    {
+        // Validate the request
+        $request->validate([
+            'content' => 'required|string',
+        ]);
+        $content = $request->input('content');
+        
+        $this->wikiFileService->updateWikiContent($slug, $content);
+        
+        return redirect()->route('wiki.page', ['any' => $slug])
+                         ->with('success', 'Page saved successfully.');
     }
 
     /**
@@ -105,21 +139,4 @@ class WikiController extends Controller
         return response()->file($path);
     }
 
-    /**
-     * Pull latest changes from git repository
-     */
-    public function pull()
-    {
-        try {
-            $result = $this->gitService->pull();
-
-            return redirect()
-                ->route('home')
-                ->with($result['status'], $result['message']);
-        } catch (RuntimeException $e) {
-            return redirect()
-                ->route('home')
-                ->with('error', 'Failed to update wiki content: '.$e->getMessage());
-        }
-    }
 }
