@@ -93,6 +93,35 @@ class GitService
         return $logs;
     }
 
+    //function getHistory(int $limit = 10): array in format ({commit message}, {commit date format 12/2/2024, 6:43:48 PM}, {commit author}, {commit hash}) 
+    
+    public function getHistory(int $limit = 10): array
+    {
+        $process = Process::path($this->repoPath);
+        $result = $process->run(
+            ['git', 'log', '--pretty=format:%s|%cd|%an|%h', '--date=format:%d/%m/%Y, %I:%M:%S %p', "-{$limit}"]
+        );
+
+        if (! $result->successful()) {
+            throw new RuntimeException('Failed to get git log: '.$result->errorOutput());
+        }
+
+        $logs = [];
+        $lines = explode("\n", trim($result->output()));
+
+        foreach ($lines as $line) {
+            [$message, $date, $author, $hash] = explode('|', $line, 4);
+            $logs[] = [
+                'message' => $message,
+                'date' => $date,
+                'author' => $author,
+                'hash' => $hash,
+            ];
+        }
+
+        return $logs;
+    }
+
     /**
      * Get current branch name
      *

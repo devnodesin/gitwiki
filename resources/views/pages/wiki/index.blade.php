@@ -21,28 +21,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
-            @if (Auth::check() && Auth::user()->role === \App\Enums\UserRoles::Admin)
-                <div class="d-flex justify-content-between mb-2">
-                    <span class="text-secondary">{{ $lastCommit['hash'] }} .
-                        {{ $lastCommit['date']->diffForHumans() }}</span>
-                    <a id="btnGitUpdate" class="btn btn-dark" href="{{ route('gitwiki.pull') }}">
-                        <i class="bi bi-arrow-clockwise"></i> Git Update
-                    </a>
-                </div>
-                <hr>
-            @endif
         </div>
     </div>
-    <div class="row d-none" id="loading">
-        <div class="text-center py-2">
-            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <div class="pt-2">
-                <span class="text-secondary">Git Updating...</span>
-            </div>
-        </div>
-    </div>
+
     <div class="row pt-4">
         @if (empty($dirs))
             <div class="alert alert-danger">
@@ -70,11 +51,3 @@
     </div>
 @stop
 
-@push('scriptsFooter')
-    <script>
-        document.getElementById('btnGitUpdate').addEventListener('click', (event) => {
-            document.getElementById('btnGitUpdate').disabled = true;
-            document.getElementById('loading').classList.remove('d-none');
-        });
-    </script>
-@endpush

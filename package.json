@@ -18,6 +18,7 @@
     "dependencies": {
         "bootstrap": "^5.3.3",
         "bootstrap-icons": "^1.11.3",
+        "easymde": "^2.18.0",
         "highlight.js": "^11.10.0",
         "mermaid": "^11.4.1"
     }

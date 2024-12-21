@@ -8,8 +8,11 @@
     </div>
     <div class="row border-top border-3 py-2 mt-2">
         <div class="col">
-            <a class="btn btn-dark" href="{{ route('home') }}">
+            <a class="btn btn-sm btn-outline-dark" href="{{ route('home') }}">
                 <i class="bi bi-caret-left-fill"></i> Back
+            </a>
+            <a class="btn btn-sm btn-outline-dark" href="{{ route('wiki.edit', ['any' => Str::after(request()->path(), 'wiki/')]) }}">
+                <i class="bi bi-pencil-fill"></i> Edit
             </a>
         </div>
     </div>

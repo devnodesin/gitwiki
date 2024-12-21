@@ -99,6 +99,18 @@ class WikiFileService
         return File::get($path);
     }
 
+    //updateWikiContent($slug, $content)
+    public function updateWikiContent(string $slug, string $content): bool
+    {
+        $path = $this->pagesPath.'/'.trim($slug, '/').'.md';
+
+        if (! File::exists($path)) {
+            return false;
+        }
+
+        return File::put($path, $content) !== false;
+    }
+
     public function getImagePath(string $slug): ?string
     {
         $path = $this->imagesPath.'/'.trim($slug, '/');

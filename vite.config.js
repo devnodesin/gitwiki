@@ -9,8 +9,14 @@ export default defineConfig({
                 "resources/js/app.js",
                 "resources/css/wiki.css",
                 "resources/js/wiki.js",
+                "resources/js/editor.js",
             ],
             refresh: true,
         }),
     ],
+    resolve: {
+        alias: {
+            '$': 'jQuery'
+        }
+    }
 });

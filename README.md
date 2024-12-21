@@ -1,25 +1,28 @@
-# GitWiki
+# About GitWiki
 
-A secure Laravel-based wiki application designed for small and medium-sized businesses (SMB) and teams to securely share content with team members. It features authentication, secure access, Git-based storage.
+**GitWiki** is a secure, Laravel-based wiki application tailored for small and medium-sized teams to securely sharing content among team members. It features authentication, secure access, Git-based storage.
 
-## Features
+## Key Features
 
-- **Git-Backed Storage**: All content is version-controlled using Git
-- **Secure Access**: Content is only accessible after user authentication
-- **Read-Only Interface**: No direct edit functionality in the web interface
-- **Git Integration**: Ability to pull Git repositories on demand
-- **Markdown Rendering**: Renders markdown files from `/storage/git` directory
+- **Git-Backed Storage:** All content is version-controlled using Git, ensuring a reliable and trackable history of changes.
+- **Secure Access:** Content is accessible only after user authentication, ensuring that only authorized users can view the information.
+- **Read-Only Interface:** The web interface is read-only, preventing direct edits and maintaining content integrity.
+- **Git Integration:** Users can pull Git repositories on demand, keeping the content up-to-date with the latest changes.
+- **Markdown Rendering:** The application renders markdown files from the git directory, providing a clean and readable format for documentation.
+
 
 ## Technical Details
 
-- Built with Laravel PHP Framework
+- Built with Laravel 11 PHP Framework
+- Configurable as Public or Private wiki
+- Pages can be protected
 - Content stored in `/storage/git` directory
-- Authentication required for viewing wiki pages
 - Git-based version control for content management
 
 ## Requirements
 
 1. PHP 8.2+
+1. Nodejs
 
 ## Installation
 

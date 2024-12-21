@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\GitController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserProfileController;
 use App\Http\Controllers\Auth\LoginController;
@@ -24,13 +25,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [UserProfileController::class, 'profile'])->name('profile');
     Route::post('/profile', [UserProfileController::class, 'update'])->name('profile.update');
 
-    Route::prefix('users')->group(function () {
-        Route::middleware('admin')->group(function () {
+    Route::middleware('admin')->group(function () {
+        Route::prefix('users')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('user.list');
             Route::post('/{id}', [UserController::class, 'update'])->name('user.update');
             Route::post('/', [UserController::class, 'add'])->name('user.add');
             Route::delete('/{id}', [UserController::class, 'delete'])->name('user.delete');
         });
+
+        Route::prefix('git')->group(function () {
+            Route::get('/', [GitController::class, 'index'])->name('git.index');
+            Route::get('/update', [GitController::class, 'pull'])->name('git.pull');
+        });
+
+
     });
 });
 
