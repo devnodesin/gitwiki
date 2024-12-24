@@ -35,10 +35,15 @@ Route::middleware('auth')->group(function () {
 
         Route::prefix('git')->group(function () {
             Route::get('/', [GitController::class, 'index'])->name('git.index');
-            Route::get('/update', [GitController::class, 'pull'])->name('git.pull');
+            Route::get('/init', [GitController::class, 'init'])->name('git.init');
+            Route::post('/clone', [GitController::class, 'clone'])->name('git.clone');
+            Route::get('/pull', [GitController::class, 'pull'])->name('git.pull');
+            Route::get('/push', [GitController::class, 'push'])->name('git.push');
+            Route::get('/commit', [GitController::class, 'commit'])->name('git.commit');
+            Route::get('/status', [GitController::class, 'status'])->name('git.status');
+            Route::get('/reset', [GitController::class, 'reset'])->name('git.reset');
+            Route::get('/reset/{hash}', [GitController::class, 'reset'])->name('git.reset.hash');
         });
-
-
     });
 });
 

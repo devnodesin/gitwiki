@@ -5,11 +5,11 @@ namespace App\Services;
 use Illuminate\Support\Str;
 use League\CommonMark\Extension\Attributes\AttributesExtension;
 use League\CommonMark\Extension\Autolink\AutolinkExtension;
+use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
 use League\CommonMark\Extension\CommonMark\Node\Block\Heading;
+use League\CommonMark\Extension\CommonMark\Node\Inline\Code;
 use League\CommonMark\Extension\CommonMark\Node\Inline\Image;
 use League\CommonMark\Extension\CommonMark\Node\Inline\Link;
-use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
-use League\CommonMark\Extension\CommonMark\Node\Inline\Code;
 use League\CommonMark\Extension\DefaultAttributes\DefaultAttributesExtension;
 use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
@@ -58,10 +58,11 @@ class MarkdownService
                     'class' => function ($node) {
                         //dd($node);
                         // Check if the node already has a class attribute, then don't add the "code" class
-                        $attributes = $node->data["attributes"];
+                        $attributes = $node->data['attributes'];
                         if (isset($attributes['class'])) {
                             return null; // Return null to keep the existing "mermaid" class
                         }
+
                         return 'code rounded-bottom-1';
                     },
                 ],

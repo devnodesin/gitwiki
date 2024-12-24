@@ -61,7 +61,7 @@ class WikiFileService
                         return false;
                     }
 
-                    return preg_match('/^[a-z0-9.-]+$/', $filename) && 
+                    return preg_match('/^[a-z0-9.-]+$/', $filename) &&
                            in_array($extension, ['md', 'markdown']);
                 })
                 ->map(function (\Symfony\Component\Finder\SplFileInfo $file) {
@@ -99,7 +99,6 @@ class WikiFileService
         return File::get($path);
     }
 
-    //updateWikiContent($slug, $content)
     public function updateWikiContent(string $slug, string $content): bool
     {
         $path = $this->pagesPath.'/'.trim($slug, '/').'.md';
@@ -107,6 +106,9 @@ class WikiFileService
         if (! File::exists($path)) {
             return false;
         }
+
+        // Ensure content is a string
+        $content = (string) $content;
 
         return File::put($path, $content) !== false;
     }

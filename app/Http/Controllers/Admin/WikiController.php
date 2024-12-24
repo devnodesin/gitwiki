@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\GitService;
 use App\Services\MarkdownService;
 use App\Services\WikiFileService;
 use App\Support\WikiHelper;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Illuminate\Http\Request;
 
 class WikiController extends Controller
 {
@@ -19,16 +18,12 @@ class WikiController extends Controller
 
     private MarkdownService $markdownService;
 
-    private GitService $gitService;
-
     public function __construct(
         WikiFileService $wikiFileService,
         MarkdownService $markdownService,
-        GitService $gitService
     ) {
         $this->wikiFileService = $wikiFileService;
         $this->markdownService = $markdownService;
-        $this->gitService = $gitService;
     }
 
     /**
@@ -42,22 +37,13 @@ class WikiController extends Controller
 
         try {
             $list = $this->wikiFileService->getDirectoryListing();
-            $lastCommit = [
-                'hash' => $this->gitService->getLastCommitHash(),
-                'date' => $this->gitService->getLastCommitDate(),
-            ];
         } catch (RuntimeException $e) {
             $list = [];
-            $lastCommit = [
-                'hash' => 'unknown',
-                'date' => now(),
-            ];
         }
 
         return view('pages.wiki.index', [
             'title' => $title,
             'dirs' => $list,
-            'lastCommit' => $lastCommit,
         ]);
     }
 
@@ -72,7 +58,7 @@ class WikiController extends Controller
         if (Str::endsWith($slug, '.lock') && auth()->guest()) {
             throw new HttpException(403, 'Login to view this page.');
         }
-        
+
         $content = $this->wikiFileService->getWikiContent($slug);
         if ($content === null) {
             return response()->view('errors.404', [
@@ -92,7 +78,7 @@ class WikiController extends Controller
         if (Str::endsWith($slug, '.lock') && auth()->guest()) {
             throw new HttpException(403, 'Login to view this page.');
         }
-        
+
         $content = $this->wikiFileService->getWikiContent($slug);
         if ($content === null) {
             return response()->view('errors.404', [
@@ -100,7 +86,7 @@ class WikiController extends Controller
             ], 404);
         }
         //dd($content);
-        $title = ['title' => 'Edit: ' . WikiHelper::title($slug)];
+        $title = ['title' => 'Edit: '.WikiHelper::title($slug)];
 
         return view('pages.wiki.edit', compact('title', 'content'));
     }
@@ -111,12 +97,14 @@ class WikiController extends Controller
         $request->validate([
             'content' => 'required|string',
         ]);
+
+        /** @var string */
         $content = $request->input('content');
-        
+
         $this->wikiFileService->updateWikiContent($slug, $content);
-        
+
         return redirect()->route('wiki.page', ['any' => $slug])
-                         ->with('success', 'Page saved successfully.');
+            ->with('success', 'Page saved successfully.');
     }
 
     /**
@@ -138,5 +126,4 @@ class WikiController extends Controller
 
         return response()->file($path);
     }
-
 }

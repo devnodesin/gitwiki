@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,14 +20,18 @@ class LoginController extends Controller
         $LOCKOUT_DURATION = 10; // 10 minutes
 
         // Initialize failed attempts count
-        $failedAttempts = $request->session()->get('failed_login_attempts', 0);
+        /** @var int */
+        $failedAttempts = $request->session()->get('failed_login_attempts') ?? 0;
+
+        /** @var Carbon|null */
         $lockoutTime = $request->session()->get('failed_login_locktime');
 
         // Check if the lockout period has expired
-        
-        if ($lockoutTime && $lockoutTime->diff(now()) ) {
+        if ($lockoutTime instanceof Carbon && $lockoutTime->diffInMinutes(now()) < $LOCKOUT_DURATION) {
+            $remainingMinutes = $LOCKOUT_DURATION - $lockoutTime->diffInMinutes(now());
+
             return back()->withErrors([
-                'email' => "Too many login attempts. Please try again after {$lockoutTime->diff(now())}.",
+                'email' => "Too many login attempts. Please try again after {$remainingMinutes} minutes.",
             ])->onlyInput('email');
         }
 

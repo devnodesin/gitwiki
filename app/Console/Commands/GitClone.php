@@ -4,34 +4,27 @@ namespace App\Console\Commands;
 
 use App\Services\GitService;
 use Illuminate\Console\Command;
-use RuntimeException;
 
 class GitClone extends Command
 {
-    protected $signature = 'wiki:clone {url} {--branch=}';
+    protected $signature = 'wiki:clone {url}';
 
     protected $description = 'Clone a git repository into the storage directory';
 
-    public function handle(): int
+    public function handle(GitService $gitService)
     {
         $url = $this->argument('url');
-        $branch = $this->option('branch');
-        $repoPath = storage_path('git');
 
-        $branchInfo = $branch ? " (branch: {$branch})" : ' (branch: main)';
-        $this->info("Cloning repository from {$url}{$branchInfo}...");
+        $result = $gitService->clone($url);
 
-        try {
-            $gitService = new GitService($repoPath);
-            $gitService->cloneRepository($url, $branch);
+        if ($result === false) {
+            $this->error('Failed to clone repository');
 
-            $this->info('Repository cloned successfully.');
-
-            return 0;
-        } catch (RuntimeException $e) {
-            $this->error($e->getMessage());
-
-            return 1;
+            return Command::FAILURE;
         }
+
+        $this->info($result);
+
+        return Command::SUCCESS;
     }
 }

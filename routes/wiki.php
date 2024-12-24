@@ -11,12 +11,6 @@ Route::prefix('wiki')->group(function () {
         ->name('wiki.image')
         ->where('any', '.*');
 
-    // Git Wiki Routes
-    /*
-    Route::get('/update', [WikiController::class, 'pull'])
-        ->name('gitwiki.pull');
-    */
-
     Route::where(['any' => '(?!images/).*'])->group(function () {
         Route::get('/{any}/edit', [WikiController::class, 'edit'])->name('wiki.edit');
         Route::get('/{any}', [WikiController::class, 'view'])->name('wiki.page');
