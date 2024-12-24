@@ -55,7 +55,7 @@ class GitService
         }
 
         $output = trim($result->output());
-        if (empty($output) && in_array('status', $command)) {
+        if (empty($output) && ! in_array('status', $command)) {
             $output = implode(' ', $command).' successful';
         }
 
