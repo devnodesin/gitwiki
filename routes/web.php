@@ -8,7 +8,7 @@ use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 
 //Wiki Routes
-if (config('wiki.auth_enable')) {
+if (! get_setting('public_wiki', false)) {
     Route::middleware('auth')->group(base_path('routes/wiki.php'));
 } else {
     Route::middleware('web')->group(base_path('routes/wiki.php'));

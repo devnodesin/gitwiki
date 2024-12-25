@@ -41,9 +41,10 @@
                         <div class="col-sm-10">
                             @switch($setting['value_type'])
                                 @case('boolean')
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" name="{{ $setting['key'] }}"
-                                            id="{{ $setting['key'] }}" value="1" {{ $setting['value'] ? 'checked' : '' }}
+                                    <div class="form-check form-switch">
+                                        <input type="hidden" name="{{ $setting['key'] }}" value="0">
+                                        <input type="checkbox" class="form-check-input" role="switch" name="{{ $setting['key'] }}"
+                                            id="{{ $setting['key'] }}" value="1" @checked($setting['value'])
                                             {{ isset($setting['edit']) && !$setting['edit'] ? 'disabled' : '' }}>
                                     </div>
                                 @break

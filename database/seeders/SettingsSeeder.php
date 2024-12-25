@@ -34,6 +34,12 @@ class SettingsSeeder extends Seeder
                 'value_type' => 'boolean',
                 'edit' => true,
             ],
+            [
+                'key' => 'footer_copyright',
+                'value' => '',
+                'value_type' => 'string',
+                'edit' => true,
+            ],
         ];
 
         foreach ($settings as $setting) {

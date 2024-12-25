@@ -15,7 +15,7 @@ if (! function_exists('get_setting')) {
 }
 
 if (! function_exists('set_setting')) {
-    function set_setting(string $key, mixed $value, bool $edit = false): void
+    function set_setting(string $key, mixed $value, bool $edit = true): void
     {
         Settings::updateOrCreate(
             ['key' => $key],
@@ -24,5 +24,16 @@ if (! function_exists('set_setting')) {
                 'edit' => $edit,
             ]
         );
+    }
+}
+
+if (! function_exists('get_footer')) {
+    function get_footer(): string
+    {
+        $defaultFooter = 'Copyright &copy; 2024 <a target=\'_blank\' class=\'link-dark link-offset-2\' href=\'https://github.com/devnodesin/gitwiki\'>Git Wiki an Open Source by Devnodes.in</a>';
+
+        $footerText = get_setting('footer_copyright');
+
+        return empty($footerText) ? $defaultFooter : $footerText;
     }
 }

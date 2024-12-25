@@ -26,14 +26,21 @@ class SettingsController extends Controller
     {
         try {
             foreach ($request->except('_token', '_method') as $key => $value) {
-                // Get current setting to check if editable
                 $setting = Settings::where('key', $key)->first();
 
                 if (! $setting || ! $setting->edit) {
                     continue;
                 }
 
-                set_setting($key, $value);
+                // Cast value based on value_type
+                $castedValue = match ($setting->value_type) {
+                    'boolean' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
+                    'integer' => (int) $value,
+                    'float' => (float) $value,
+                    default => $value
+                };
+
+                set_setting($key, $castedValue);
             }
 
             return redirect()
