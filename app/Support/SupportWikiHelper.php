@@ -4,7 +4,7 @@ namespace App\Support;
 
 use Illuminate\Support\Str;
 
-class WikiHelper
+class SupportWikiHelper
 {
     /**
      * Converts a local file path to a URL for the wiki by

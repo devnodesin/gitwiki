@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Support\WikiHelper;
+use App\Support\SupportWikiHelper;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use RuntimeException;
@@ -66,15 +66,15 @@ class WikiFileService
                 })
                 ->map(function (\Symfony\Component\Finder\SplFileInfo $file) {
                     return [
-                        'title' => WikiHelper::title($file->getFilename()),
-                        'url' => WikiHelper::urlize($file->getPathname()),
+                        'title' => SupportWikiHelper::title($file->getFilename()),
+                        'url' => SupportWikiHelper::urlize($file->getPathname()),
                     ];
                 })
                 ->values()
                 ->all();
 
             if (! empty($files)) {
-                $listing[WikiHelper::title($dirName)] = $files;
+                $listing[SupportWikiHelper::title($dirName)] = $files;
             }
         }
 

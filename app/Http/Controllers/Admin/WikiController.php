@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Services\MarkdownService;
 use App\Services\WikiFileService;
-use App\Support\WikiHelper;
+use App\Support\SupportWikiHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use RuntimeException;
@@ -67,7 +67,7 @@ class WikiController extends Controller
         }
 
         $html = $this->markdownService->toHtml($content);
-        $title = ['title' => WikiHelper::title($slug)];
+        $title = ['title' => SupportWikiHelper::title($slug)];
 
         return view('pages.wiki.view', compact('title', 'html'));
     }
@@ -86,7 +86,7 @@ class WikiController extends Controller
             ], 404);
         }
         //dd($content);
-        $title = ['title' => 'Edit: '.WikiHelper::title($slug)];
+        $title = ['title' => 'Edit: '.SupportWikiHelper::title($slug)];
 
         return view('pages.wiki.edit', compact('title', 'content'));
     }
