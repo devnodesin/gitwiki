@@ -64,7 +64,7 @@ class UserControllerTest extends TestCase
         $this->actingAs($user);
 
         $response = $this->get(route('user.list'));
-        $response->assertViewIs('pages.user.list');
+        $response->assertViewIs('pages.admin.user');
     }
 
     public function test_reader_view_user_list()

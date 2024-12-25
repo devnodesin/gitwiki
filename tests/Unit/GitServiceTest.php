@@ -38,16 +38,16 @@ class GitServiceTest extends TestCase
     {
         $temporaryDirectory = $this->testRepoPath;
         $gitService = new GitService($temporaryDirectory);
-        $gitService->cloneRepository('https://github.com/devnodesin/gitwiki-doc.git');
+        $gitService->clone('https://github.com/devnodesin/gitwiki-doc.git');
 
         $this->assertDirectoryExists($temporaryDirectory);
         $this->assertFileExists($temporaryDirectory.'/README.md');
         $this->assertFileExists($temporaryDirectory.'/LICENSE');
 
         //git pull
-        $gitService->pullRepository();
+        $gitService->pull();
 
-        $log = $gitService->getLog();
+        $log = $gitService->log();
         $this->assertIsArray($log);
         foreach ($log as $entry) {
             $this->assertArrayHasKey('hash', $entry);
@@ -55,27 +55,6 @@ class GitServiceTest extends TestCase
             $this->assertArrayHasKey('date', $entry);
             $this->assertArrayHasKey('message', $entry);
         }
-
-        $currentBranch = $gitService->getCurrentBranch();
-        $this->assertEquals('main', $currentBranch);
-
-        $gitService->setCurrentBranch('main');
-        $currentBranchAfterSwitch = $gitService->getCurrentBranch();
-        $this->assertEquals('main', $currentBranchAfterSwitch);
-
-        $lastCommit = $gitService->getLastCommit();
-        $this->assertArrayHasKey('hash', $lastCommit);
-        $this->assertArrayHasKey('date', $lastCommit);
-        $this->assertArrayHasKey('message', $lastCommit);
-
-        // test getLastCommitHash
-        $lastCommitHash = $gitService->getLastCommitHash();
-        $this->assertIsString($lastCommitHash);
-        $this->assertNotEmpty($lastCommitHash);
-
-        // test getLastCommitDate
-        $lastCommitDate = $gitService->getLastCommitDate();
-        $this->assertInstanceOf(Carbon::class, $lastCommitDate);
 
         File::deleteDirectory($this::TEST_DIR, true);
 

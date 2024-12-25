@@ -87,7 +87,7 @@ class WikiControllerTest extends TestCase
         $user = User::where('email', 'test.reader@example.com')->first();
         $this->actingAs($user);
 
-        $response = $this->get('/wiki/99-test/test');
+        $response = $this->get('/wiki/99-test/public-article');
         $response->assertViewIs('pages.wiki.view');
     }
 

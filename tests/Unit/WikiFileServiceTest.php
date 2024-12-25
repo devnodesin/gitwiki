@@ -53,7 +53,7 @@ class WikiFileServiceTest extends TestCase
     public function test_get_wiki_content_with_existing_file(): void
     {
         // Create test wiki file
-        $testFile = '99-test/test';
+        $testFile = '99-test/public-article';
 
         // Test getWikiContent
         $result = $this->service->getWikiContent($testFile);
