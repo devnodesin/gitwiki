@@ -20,7 +20,7 @@ class UserController extends Controller
 
         $users = User::paginate(15);
 
-        return view('pages.user.list', compact('title', 'users'));
+        return view('pages.admin.user', compact('title', 'users'));
     }
 
     public function add(Request $request)
