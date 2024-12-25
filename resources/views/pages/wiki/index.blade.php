@@ -1,7 +1,7 @@
 @extends('layouts.default')
 @section('content')
 
-    <div class="row pt-4">
+    <div class="row pt-3">
         <div class="col">
             @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -24,7 +24,8 @@
         </div>
     </div>
 
-    <div class="row pt-4">
+
+    <div class="row pt-2">
         @if (empty($dirs))
             <div class="alert alert-danger">
                 Let's Get Started! Your Content Repository Needs Setup
@@ -50,4 +51,3 @@
         @endif
     </div>
 @stop
-
