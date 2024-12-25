@@ -24,7 +24,7 @@ class GitController extends Controller
             $gitRemote = false;
         }
 
-        return view('pages.git.index', [
+        return view('pages.admin.git', [
             'title' => ['title' => 'Manage Content'],
             'gitRemote' => $gitRemote,
             'history' => $history,
@@ -63,7 +63,7 @@ class GitController extends Controller
         $status = ($result) ? 'success' : 'error';
         //on success set the git_remote setting to the url
         if ($result) {
-            set_setting('git_remote', 'local');
+            set_setting('git_remote', 'local', false);
         }
 
         return redirect()
@@ -96,7 +96,7 @@ class GitController extends Controller
 
         //on success set the git_remote setting to the url
         if ($result) {
-            set_setting('git_remote', $url);
+            set_setting('git_remote', $url, false);
         }
 
         return redirect()

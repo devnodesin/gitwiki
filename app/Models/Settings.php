@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Settings extends Model
 {
-    protected $fillable = ['key', 'value', 'value_type'];
+    protected $fillable = ['key', 'value', 'value_type', 'edit'];
+
+    protected $casts = [
+        'edit' => 'boolean',
+    ];
 
     public function getValueAttribute($value)
     {

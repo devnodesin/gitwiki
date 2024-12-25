@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('key')->unique();
             $table->text('value')->nullable();
             $table->enum('value_type', ['string', 'integer', 'boolean', 'float', 'array', 'null'])->default('string');
+            $table->boolean('edit')->default(true);
             $table->timestamps();
         });
     }

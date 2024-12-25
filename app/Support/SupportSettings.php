@@ -15,11 +15,14 @@ if (! function_exists('get_setting')) {
 }
 
 if (! function_exists('set_setting')) {
-    function set_setting(string $key, mixed $value): void
+    function set_setting(string $key, mixed $value, bool $edit = false): void
     {
         Settings::updateOrCreate(
             ['key' => $key],
-            ['value' => $value]
+            [
+                'value' => $value,
+                'edit' => $edit,
+            ]
         );
     }
 }

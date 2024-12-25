@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\GitController;
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserProfileController;
 use App\Http\Controllers\Auth\LoginController;
@@ -32,6 +33,9 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [UserController::class, 'add'])->name('user.add');
             Route::delete('/{id}', [UserController::class, 'delete'])->name('user.delete');
         });
+
+        Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+        Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
 
         Route::prefix('git')->group(function () {
             Route::get('/', [GitController::class, 'index'])->name('git.index');
