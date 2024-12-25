@@ -32,6 +32,7 @@ if (! function_exists('get_footer')) {
     {
         $defaultFooter = 'Copyright &copy; 2024 <a target=\'_blank\' class=\'link-dark link-offset-2\' href=\'https://github.com/devnodesin/gitwiki\'>Git Wiki an Open Source by Devnodes.in</a>';
 
+        /** @var string $footerText */
         $footerText = get_setting('footer_copyright');
 
         return empty($footerText) ? $defaultFooter : $footerText;
